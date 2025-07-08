@@ -1,0 +1,61 @@
+{
+  "name": "bookmark-manager-api",
+  "version": "0.0.1",
+  "description": "RESTful API + JWT 인증을 활용한 개인용 북마크 관리 시스템",
+  "homepage": "https://github.com/Arnms/bookmark-manager-api#readme",
+  "bugs": {
+    "url": "https://github.com/Arnms/bookmark-manager-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arnms/bookmark-manager-api.git"
+  },
+  "license": "MIT",
+  "author": "Arnms",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.0.1",
+    "@fastify/helmet": "^13.0.1",
+    "@fastify/jwt": "^9.1.0",
+    "@fastify/rate-limit": "^10.3.0",
+    "@fastify/type-provider-typebox": "^5.1.0",
+    "@prisma/client": "^6.11.1",
+    "@sinclair/typebox": "^0.34.37",
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.0.1",
+    "fastify": "^5.4.0",
+    "fastify-type-provider-zod": "^5.0.1",
+    "pino": "^9.7.0",
+    "pino-pretty": "^13.0.0",
+    "prisma": "^6.11.1",
+    "zod": "^3.25.75"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.30.1",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/dotenv": "^6.1.1",
+    "@types/node": "^24.0.10",
+    "@typescript-eslint/eslint-plugin": "^8.35.1",
+    "@typescript-eslint/parser": "^8.35.1",
+    "eslint": "^9.30.1",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.1",
+    "globals": "^16.3.0",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.35.1"
+  },
+  "engines": {
+    "node": ">=18.2.0"
+  },
+  "private": true
+}
