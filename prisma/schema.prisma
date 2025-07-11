@@ -1,0 +1,123 @@
+// 북마크 관리 API - Prisma 스키마
+// 참고: docs/04-database-design.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// 사용자 모델 - 인증 및 프로필 관리
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // bcrypt로 해시된 비밀번호
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 관계: 사용자가 소유한 데이터들
+  bookmarks  Bookmark[]
+  categories Category[]
+  tags       Tag[]
+
+  @@map("users")
+}
+
+// 카테고리 모델 - 북마크 분류 시스템
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  color       String?  // hex 색상 코드 (#FFFFFF)
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 관계
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookmarks Bookmark[]
+
+  // 사용자별 카테고리명 유니크 제약
+  @@unique([userId, name])
+  @@map("categories")
+}
+
+// 웹사이트 메타데이터 모델 - 중복 방지를 위한 캐시
+model WebsiteMetadata {
+  id          String   @id @default(cuid())
+  url         String   @unique
+  title       String?
+  description String?
+  favicon     String?
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 관계
+  bookmarks Bookmark[]
+
+  @@map("website_metadata")
+}
+
+// 북마크 모델 - 핵심 엔티티
+model Bookmark {
+  id                  String   @id @default(cuid())
+  personalTitle       String?  // 사용자 지정 제목
+  personalNote        String?  // 개인 메모
+  isPublic            Boolean  @default(false)
+  userId              String
+  websiteMetadataId   String
+  categoryId          String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  deletedAt           DateTime? // 소프트 삭제를 위한 필드
+
+  // 관계
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  websiteMetadata WebsiteMetadata   @relation(fields: [websiteMetadataId], references: [id], onDelete: Cascade)
+  category        Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags            BookmarkTag[]
+
+  // 성능 최적화를 위한 인덱스
+  @@index([userId])
+  @@index([userId, deletedAt])
+  @@index([categoryId])
+  @@index([createdAt])
+  @@map("bookmarks")
+}
+
+// 태그 모델 - 유연한 라벨링 시스템
+model Tag {
+  id        String   @id @default(cuid())
+  name      String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 관계
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookmarks BookmarkTag[]
+
+  // 사용자별 태그명 유니크 제약
+  @@unique([userId, name])
+  @@map("tags")
+}
+
+// 북마크-태그 연결 테이블 - 다대다 관계
+model BookmarkTag {
+  bookmarkId String
+  tagId      String
+  createdAt  DateTime @default(now())
+
+  // 관계
+  bookmark Bookmark @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
+  tag      Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  // 복합 Primary Key로 중복 방지
+  @@id([bookmarkId, tagId])
+  @@map("bookmark_tags")
+}
