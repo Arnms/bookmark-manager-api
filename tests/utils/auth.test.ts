@@ -1,5 +1,6 @@
 import { hashPassword, verifyPassword } from '../../src/utils/auth';
 
+// 이 테스트는 데이터베이스가 필요하지 않으므로 setup.ts를 사용하지 않음
 describe('인증 유틸리티 함수 테스트', () => {
   describe('hashPassword', () => {
     it('비밀번호를 해싱해야 함', async () => {

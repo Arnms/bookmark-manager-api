@@ -56,7 +56,7 @@ describe('응답 유틸리티 함수 테스트', () => {
 
       expect(response.success).toBe(false);
       expect(response.message).toBe(message);
-      expect(response.error.code).toBe('UNKNOWN_ERROR');
+      expect(response.error?.code).toBe('UNKNOWN_ERROR');
     });
   });
 
