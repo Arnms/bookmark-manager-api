@@ -1,7 +1,14 @@
+/**
+ * 인증 API 라우트
+ * 회원가입, 로그인, 사용자 정보 조회 엔드포인트 제공
+ */
+
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../config/database';
 import { hashPassword, verifyPassword } from '../utils/auth';
+
+// === 스키마 검증 정의 ===
 
 // 회원가입 스키마 검증
 const registerSchema = z.object({
@@ -17,7 +24,7 @@ const loginSchema = z.object({
 });
 
 export default async function authRoutes(fastify: FastifyInstance) {
-  // 회원가입 API
+  // === 회원가입 API ===
   fastify.post('/register', async (request, reply) => {
     try {
       const { email, password, name } = registerSchema.parse(request.body);
@@ -77,7 +84,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // 로그인 API
+  // === 로그인 API ===
   fastify.post('/login', async (request, reply) => {
     try {
       const { email, password } = loginSchema.parse(request.body);
@@ -133,7 +140,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // 토큰 검증 API (현재 사용자 정보 조회)
+  // === 사용자 정보 조회 API ===
   fastify.get('/me', {
     preHandler: async (request, reply) => {
       try {

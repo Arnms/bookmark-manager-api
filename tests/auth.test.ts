@@ -1,3 +1,8 @@
+/**
+ * 인증 API 통합 테스트
+ * 회원가입, 로그인, 사용자 정보 조회 엔드포인트 테스트
+ */
+
 import { FastifyInstance } from 'fastify';
 import { buildApp } from '../src/app';
 import { prisma } from '../src/config/database';

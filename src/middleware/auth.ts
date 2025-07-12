@@ -1,3 +1,8 @@
+/**
+ * 인증 미들웨어 모듈
+ * FastifyJWT를 이용한 필수/선택적 인증 처리
+ */
+
 import { FastifyRequest, FastifyReply } from 'fastify';
 
 export interface AuthenticatedUser {
