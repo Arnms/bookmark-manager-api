@@ -1,3 +1,10 @@
+import fs from 'fs';
+import path from 'path';
+
 export default async () => {
-  // 전역 정리 작업 (필요시 추가)
+  // 테스트 데이터베이스 파일 정리
+  const testDbPath = path.resolve(process.cwd(), 'test.db');
+  if (fs.existsSync(testDbPath)) {
+    fs.unlinkSync(testDbPath);
+  }
 };
