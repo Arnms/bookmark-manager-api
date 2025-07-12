@@ -20,7 +20,7 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   
   // 로그 설정
-  LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
+  LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug', 'silent']).default('info'),
   
   // CORS 설정
   CORS_ORIGIN: z.string().default('*'),
@@ -42,6 +42,10 @@ const parseEnv = () => {
     return envSchema.parse(process.env)
   } catch (error) {
     console.error('❌ 환경변수 설정 오류:', error)
+    // 테스트 환경에서는 process.exit 대신 에러를 던짐
+    if (process.env.NODE_ENV === 'test') {
+      throw error
+    }
     process.exit(1)
   }
 }
