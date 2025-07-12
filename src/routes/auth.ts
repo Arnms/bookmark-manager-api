@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { prisma } from '../config/database.js';
-import { hashPassword, verifyPassword } from '../utils/auth.js';
+import { prisma } from '../config/database';
+import { hashPassword, verifyPassword } from '../utils/auth';
 
 // 회원가입 스키마 검증
 const registerSchema = z.object({

@@ -4,7 +4,7 @@
  */
 
 import { PrismaClient } from '@prisma/client'
-import { env, isDevelopment } from './env.js'
+import { env, isDevelopment } from './env'
 
 // Prisma 클라이언트 타입 확장
 declare global {

@@ -4,7 +4,7 @@
  */
 
 import fastify, { FastifyInstance } from 'fastify';
-import { env, isDevelopment } from './config/env.js';
+import { env, isDevelopment } from './config/env';
 
 export async function buildApp(): Promise<FastifyInstance> {
   // Fastify 인스턴스 생성
@@ -63,7 +63,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   // === 라우트 등록 ===
   
   // 인증 라우트
-  await app.register(import('./routes/auth.js'), { prefix: '/auth' });
+  await app.register(import('./routes/auth'), { prefix: '/auth' });
 
   // === 기본 헬스체크 라우트 ===
   app.get('/health', async (request, reply) => {
