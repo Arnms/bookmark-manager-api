@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../config/database.js';
-import { hashPassword, verifyPassword, generateToken } from '../utils/auth.js';
+import { hashPassword, verifyPassword } from '../utils/auth.js';
 
 // 회원가입 스키마 검증
 const registerSchema = z.object({
@@ -52,7 +52,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
       });
 
       // JWT 토큰 생성
-      const token = generateToken({
+      const token = fastify.jwt.sign({
         userId: user.id,
         email: user.email,
       });
@@ -103,7 +103,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
       }
 
       // JWT 토큰 생성
-      const token = generateToken({
+      const token = fastify.jwt.sign({
         userId: user.id,
         email: user.email,
       });
