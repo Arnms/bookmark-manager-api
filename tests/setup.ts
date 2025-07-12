@@ -1,3 +1,8 @@
+/**
+ * 테스트 환경 설정
+ * 각 테스트 전후 데이터베이스 정리 및 연결 관리
+ */
+
 import { prisma } from '../src/config/database';
 
 beforeAll(async () => {

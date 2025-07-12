@@ -1,3 +1,8 @@
+/**
+ * 인증 유틸리티 함수 테스트
+ * 비밀번호 해싱 및 검증 기능 테스트
+ */
+
 import { hashPassword, verifyPassword } from '../../src/utils/auth';
 
 // 이 테스트는 데이터베이스가 필요하지 않으므로 setup.ts를 사용하지 않음
