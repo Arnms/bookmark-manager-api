@@ -532,4 +532,217 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
       }
     },
   );
+
+  // === 북마크에 태그 추가 API ===
+  fastify.post(
+    '/:id/tags',
+    {
+      preHandler: authenticate,
+    },
+    async (request, reply) => {
+      try {
+        const userId = (request as any).user.userId;
+        const { id } = request.params as { id: string };
+        const { tagIds } = z.object({ tagIds: z.array(z.string()) }).parse(request.body);
+
+        // 북마크 존재 확인
+        const existingBookmark = await prisma.bookmark.findFirst({
+          where: {
+            id,
+            userId,
+            deletedAt: null,
+          },
+        });
+
+        if (!existingBookmark) {
+          return reply.status(404).send({
+            success: false,
+            error: {
+              code: 'NOT_FOUND',
+              message: '북마크를 찾을 수 없습니다.',
+            },
+            timestamp: new Date().toISOString(),
+          });
+        }
+
+        // 태그 소유권 확인
+        const userTags = await prisma.tag.findMany({
+          where: {
+            id: { in: tagIds },
+            userId,
+          },
+        });
+
+        if (userTags.length !== tagIds.length) {
+          return reply.status(400).send({
+            success: false,
+            error: {
+              code: 'INVALID_TAGS',
+              message: '유효하지 않은 태그가 포함되어 있습니다.',
+            },
+            timestamp: new Date().toISOString(),
+          });
+        }
+
+        // 태그 연결 (중복 방지)
+        const tagConnections = tagIds.map(tagId => ({
+          bookmarkId: id,
+          tagId,
+        }));
+
+        for (const connection of tagConnections) {
+          await prisma.bookmarkTag.upsert({
+            where: {
+              bookmarkId_tagId: {
+                bookmarkId: connection.bookmarkId,
+                tagId: connection.tagId,
+              },
+            },
+            update: {},
+            create: connection,
+          });
+        }
+
+        reply.send(success(null, '태그가 성공적으로 추가되었습니다.'));
+      } catch (error) {
+        fastify.log.error(error);
+        reply.status(500).send({
+          success: false,
+          error: {
+            code: 'INTERNAL_SERVER_ERROR',
+            message: '서버 오류가 발생했습니다.',
+          },
+          timestamp: new Date().toISOString(),
+        });
+      }
+    },
+  );
+
+  // === 북마크에서 태그 제거 API ===
+  fastify.delete(
+    '/:id/tags/:tagId',
+    {
+      preHandler: authenticate,
+    },
+    async (request, reply) => {
+      try {
+        const userId = (request as any).user.userId;
+        const { id, tagId } = request.params as { id: string; tagId: string };
+
+        // 북마크 존재 확인
+        const existingBookmark = await prisma.bookmark.findFirst({
+          where: {
+            id,
+            userId,
+            deletedAt: null,
+          },
+        });
+
+        if (!existingBookmark) {
+          return reply.status(404).send({
+            success: false,
+            error: {
+              code: 'NOT_FOUND',
+              message: '북마크를 찾을 수 없습니다.',
+            },
+            timestamp: new Date().toISOString(),
+          });
+        }
+
+        // 태그 연결 삭제
+        await prisma.bookmarkTag.deleteMany({
+          where: {
+            bookmarkId: id,
+            tagId,
+          },
+        });
+
+        reply.send(success(null, '태그가 성공적으로 제거되었습니다.'));
+      } catch (error) {
+        fastify.log.error(error);
+        reply.status(500).send({
+          success: false,
+          error: {
+            code: 'INTERNAL_SERVER_ERROR',
+            message: '서버 오류가 발생했습니다.',
+          },
+          timestamp: new Date().toISOString(),
+        });
+      }
+    },
+  );
+
+  // === 북마크 카테고리 변경 API ===
+  fastify.patch(
+    '/:id/category',
+    {
+      preHandler: authenticate,
+    },
+    async (request, reply) => {
+      try {
+        const userId = (request as any).user.userId;
+        const { id } = request.params as { id: string };
+        const { categoryId } = z.object({ categoryId: z.string().nullable() }).parse(request.body);
+
+        // 북마크 존재 확인
+        const existingBookmark = await prisma.bookmark.findFirst({
+          where: {
+            id,
+            userId,
+            deletedAt: null,
+          },
+        });
+
+        if (!existingBookmark) {
+          return reply.status(404).send({
+            success: false,
+            error: {
+              code: 'NOT_FOUND',
+              message: '북마크를 찾을 수 없습니다.',
+            },
+            timestamp: new Date().toISOString(),
+          });
+        }
+
+        // 카테고리 소유권 확인 (카테고리가 설정되는 경우)
+        if (categoryId) {
+          const category = await prisma.category.findFirst({
+            where: {
+              id: categoryId,
+              userId,
+            },
+          });
+
+          if (!category) {
+            return reply.status(400).send({
+              success: false,
+              error: {
+                code: 'INVALID_CATEGORY',
+                message: '유효하지 않은 카테고리입니다.',
+              },
+              timestamp: new Date().toISOString(),
+            });
+          }
+        }
+
+        // 카테고리 변경
+        await prisma.bookmark.update({
+          where: { id },
+          data: { categoryId },
+        });
+
+        reply.send(success(null, '카테고리가 성공적으로 변경되었습니다.'));
+      } catch (error) {
+        fastify.log.error(error);
+        reply.status(500).send({
+          success: false,
+          error: {
+            code: 'INTERNAL_SERVER_ERROR',
+            message: '서버 오류가 발생했습니다.',
+          },
+          timestamp: new Date().toISOString(),
+        });
+      }
+    },
+  );
 }
