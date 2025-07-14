@@ -61,7 +61,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   });
 
   // === 라우트 등록 ===
-  
+
   // 인증 라우트
   await app.register(import('./routes/auth'), { prefix: '/auth' });
 

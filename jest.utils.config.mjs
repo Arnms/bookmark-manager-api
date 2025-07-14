@@ -5,9 +5,12 @@ export default {
   roots: ['<rootDir>/tests/utils'],
   testMatch: ['**/utils/**/*.test.ts'],
   transform: {
-    '^.+\\.ts$': ['ts-jest', {
-      useESM: true
-    }],
+    '^.+\\.ts$': [
+      'ts-jest',
+      {
+        useESM: true,
+      },
+    ],
   },
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',

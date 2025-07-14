@@ -141,43 +141,47 @@ export default async function authRoutes(fastify: FastifyInstance) {
   });
 
   // === 사용자 정보 조회 API ===
-  fastify.get('/me', {
-    preHandler: async (request, reply) => {
-      try {
-        await request.jwtVerify();
-      } catch (err) {
-        reply.status(401).send({ error: '인증이 필요합니다.' });
-      }
+  fastify.get(
+    '/me',
+    {
+      preHandler: async (request, reply) => {
+        try {
+          await request.jwtVerify();
+        } catch (err) {
+          reply.status(401).send({ error: '인증이 필요합니다.' });
+        }
+      },
     },
-  }, async (request, reply) => {
-    try {
-      const payload = (request as any).user;
-      
-      const user = await prisma.user.findUnique({
-        where: { id: payload.userId },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      });
+    async (request, reply) => {
+      try {
+        const payload = (request as any).user;
 
-      if (!user) {
-        return reply.status(404).send({
-          error: '사용자를 찾을 수 없습니다.',
+        const user = await prisma.user.findUnique({
+          where: { id: payload.userId },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        });
+
+        if (!user) {
+          return reply.status(404).send({
+            error: '사용자를 찾을 수 없습니다.',
+          });
+        }
+
+        reply.send({
+          user,
+        });
+      } catch (error) {
+        fastify.log.error(error);
+        reply.status(500).send({
+          error: '서버 오류가 발생했습니다.',
         });
       }
-
-      reply.send({
-        user,
-      });
-    } catch (error) {
-      fastify.log.error(error);
-      reply.status(500).send({
-        error: '서버 오류가 발생했습니다.',
-      });
-    }
-  });
+    },
+  );
 }

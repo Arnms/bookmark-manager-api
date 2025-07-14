@@ -3,7 +3,11 @@
  * 표준화된 API 응답 형식 생성 기능 테스트
  */
 
-import { createResponse, createErrorResponse, createPaginatedResponse } from '../../src/utils/response';
+import {
+  createResponse,
+  createErrorResponse,
+  createPaginatedResponse,
+} from '../../src/utils/response';
 
 describe('응답 유틸리티 함수 테스트', () => {
   describe('createResponse', () => {

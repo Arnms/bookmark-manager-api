@@ -10,10 +10,7 @@ export interface AuthenticatedUser {
   email: string;
 }
 
-export const requireAuth = async (
-  request: FastifyRequest,
-  reply: FastifyReply
-): Promise<void> => {
+export const requireAuth = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
   try {
     await request.jwtVerify();
   } catch (error) {
@@ -23,10 +20,7 @@ export const requireAuth = async (
   }
 };
 
-export const optionalAuth = async (
-  request: FastifyRequest,
-  reply: FastifyReply
-): Promise<void> => {
+export const optionalAuth = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
   try {
     await request.jwtVerify();
   } catch (error) {

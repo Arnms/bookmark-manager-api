@@ -29,7 +29,7 @@ export function createResponse<T = any>(
   success: boolean,
   message: string,
   data: T | null = null,
-  errorCode?: string
+  errorCode?: string,
 ): ApiResponse<T> {
   return {
     success,
@@ -50,7 +50,7 @@ export function createResponse<T = any>(
  */
 export function createErrorResponse(
   message: string,
-  code: string = 'UNKNOWN_ERROR'
+  code: string = 'UNKNOWN_ERROR',
 ): ApiResponse<null> {
   return createResponse(false, message, null, code);
 }
@@ -67,10 +67,10 @@ export function createPaginatedResponse<T = any>(
     limit: number;
     total: number;
     totalPages: number;
-  }
+  },
 ): PaginatedResponse<T> {
   const baseResponse = createResponse(success, message, data);
-  
+
   return {
     ...baseResponse,
     data,
@@ -81,7 +81,10 @@ export function createPaginatedResponse<T = any>(
 /**
  * 성공 응답 생성 (간편 함수)
  */
-export function success<T = any>(data: T, message: string = '요청이 성공했습니다.'): ApiResponse<T> {
+export function success<T = any>(
+  data: T,
+  message: string = '요청이 성공했습니다.',
+): ApiResponse<T> {
   return createResponse(true, message, data);
 }
 

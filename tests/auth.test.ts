@@ -39,7 +39,7 @@ describe('인증 API 테스트', () => {
       });
 
       expect(response.statusCode).toBe(201);
-      
+
       const responseBody = JSON.parse(response.body);
       expect(responseBody.message).toBe('회원가입이 완료되었습니다.');
       expect(responseBody.user).toHaveProperty('id');
@@ -71,7 +71,7 @@ describe('인증 API 테스트', () => {
       });
 
       expect(response.statusCode).toBe(400);
-      
+
       const responseBody = JSON.parse(response.body);
       expect(responseBody.error).toBe('이미 존재하는 이메일 주소입니다.');
     });
@@ -90,7 +90,7 @@ describe('인증 API 테스트', () => {
       });
 
       expect(response.statusCode).toBe(400);
-      
+
       const responseBody = JSON.parse(response.body);
       expect(responseBody.error).toBe('입력 데이터가 유효하지 않습니다.');
       expect(responseBody.details).toBeDefined();
@@ -110,7 +110,7 @@ describe('인증 API 테스트', () => {
       });
 
       expect(response.statusCode).toBe(400);
-      
+
       const responseBody = JSON.parse(response.body);
       expect(responseBody.error).toBe('입력 데이터가 유효하지 않습니다.');
     });
@@ -143,7 +143,7 @@ describe('인증 API 테스트', () => {
       });
 
       expect(response.statusCode).toBe(200);
-      
+
       const responseBody = JSON.parse(response.body);
       expect(responseBody.message).toBe('로그인이 완료되었습니다.');
       expect(responseBody.user).toHaveProperty('id');
@@ -165,7 +165,7 @@ describe('인증 API 테스트', () => {
       });
 
       expect(response.statusCode).toBe(401);
-      
+
       const responseBody = JSON.parse(response.body);
       expect(responseBody.error).toBe('이메일 또는 비밀번호가 올바르지 않습니다.');
     });
@@ -183,7 +183,7 @@ describe('인증 API 테스트', () => {
       });
 
       expect(response.statusCode).toBe(401);
-      
+
       const responseBody = JSON.parse(response.body);
       expect(responseBody.error).toBe('이메일 또는 비밀번호가 올바르지 않습니다.');
     });
@@ -218,7 +218,7 @@ describe('인증 API 테스트', () => {
       });
 
       expect(response.statusCode).toBe(200);
-      
+
       const responseBody = JSON.parse(response.body);
       expect(responseBody.user).toHaveProperty('id');
       expect(responseBody.user.email).toBe('test@example.com');
@@ -233,7 +233,7 @@ describe('인증 API 테스트', () => {
       });
 
       expect(response.statusCode).toBe(401);
-      
+
       const responseBody = JSON.parse(response.body);
       expect(responseBody.error).toBe('인증이 필요합니다.');
     });
@@ -248,7 +248,7 @@ describe('인증 API 테스트', () => {
       });
 
       expect(response.statusCode).toBe(401);
-      
+
       const responseBody = JSON.parse(response.body);
       expect(responseBody.error).toBe('인증이 필요합니다.');
     });

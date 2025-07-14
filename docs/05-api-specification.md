@@ -15,6 +15,7 @@
 ## 응답 형식 표준
 
 ### 성공 응답
+
 ```json
 {
   "success": true,
@@ -25,6 +26,7 @@
 ```
 
 ### 목록 응답 (페이지네이션)
+
 ```json
 {
   "success": true,
@@ -45,6 +47,7 @@
 ```
 
 ### 에러 응답
+
 ```json
 {
   "success": false,
@@ -67,11 +70,13 @@
 ### 1. 인증 관련 API (US-001, US-002)
 
 #### 1.1 회원가입
+
 ```
 POST /auth/register
 ```
 
 **요청 본문:**
+
 ```json
 {
   "email": "user@example.com",
@@ -81,6 +86,7 @@ POST /auth/register
 ```
 
 **응답:**
+
 ```json
 {
   "success": true,
@@ -98,15 +104,18 @@ POST /auth/register
 ```
 
 **에러 응답:**
+
 - `400` - 입력값 검증 실패
 - `409` - 이미 존재하는 이메일
 
 #### 1.2 로그인
+
 ```
 POST /auth/login
 ```
 
 **요청 본문:**
+
 ```json
 {
   "email": "user@example.com",
@@ -115,6 +124,7 @@ POST /auth/login
 ```
 
 **응답:**
+
 ```json
 {
   "success": true,
@@ -131,16 +141,19 @@ POST /auth/login
 ```
 
 **에러 응답:**
+
 - `400` - 입력값 검증 실패
 - `401` - 이메일 또는 비밀번호 불일치
 
 #### 1.3 사용자 정보 조회
+
 ```
 GET /auth/me
 Authorization: Bearer <token>
 ```
 
 **응답:**
+
 ```json
 {
   "success": true,
@@ -160,12 +173,14 @@ Authorization: Bearer <token>
 ### 2. 북마크 관리 API (US-003, US-004, US-005)
 
 #### 2.1 북마크 생성
+
 ```
 POST /bookmarks
 Authorization: Bearer <token>
 ```
 
 **요청 본문:**
+
 ```json
 {
   "url": "https://example.com",
@@ -178,6 +193,7 @@ Authorization: Bearer <token>
 ```
 
 **응답:**
+
 ```json
 {
   "success": true,
@@ -212,12 +228,14 @@ Authorization: Bearer <token>
 ```
 
 #### 2.2 북마크 목록 조회
+
 ```
 GET /bookmarks?page=1&limit=20&categoryId=category_123&tags=개발,참고자료&search=검색어&sort=createdAt&order=desc
 Authorization: Bearer <token>
 ```
 
 **쿼리 파라미터:**
+
 - `page`: 페이지 번호 (기본값: 1)
 - `limit`: 페이지당 항목 수 (기본값: 20, 최대: 100)
 - `categoryId`: 카테고리 필터 (선택사항)
@@ -228,18 +246,21 @@ Authorization: Bearer <token>
 - `isPublic`: 공개 여부 필터 (선택사항)
 
 #### 2.3 북마크 상세 조회
+
 ```
 GET /bookmarks/:id
 Authorization: Bearer <token>
 ```
 
 #### 2.4 북마크 수정
+
 ```
 PUT /bookmarks/:id
 Authorization: Bearer <token>
 ```
 
 **요청 본문:**
+
 ```json
 {
   "personalTitle": "수정된 제목",
@@ -251,6 +272,7 @@ Authorization: Bearer <token>
 ```
 
 #### 2.5 북마크 삭제 (소프트 삭제)
+
 ```
 DELETE /bookmarks/:id
 Authorization: Bearer <token>
@@ -259,12 +281,14 @@ Authorization: Bearer <token>
 ### 3. 카테고리 관리 API (US-006)
 
 #### 3.1 카테고리 생성
+
 ```
 POST /categories
 Authorization: Bearer <token>
 ```
 
 **요청 본문:**
+
 ```json
 {
   "name": "카테고리명",
@@ -274,12 +298,14 @@ Authorization: Bearer <token>
 ```
 
 #### 3.2 카테고리 목록 조회
+
 ```
 GET /categories
 Authorization: Bearer <token>
 ```
 
 **응답:**
+
 ```json
 {
   "success": true,
@@ -300,12 +326,14 @@ Authorization: Bearer <token>
 ```
 
 #### 3.3 카테고리 수정
+
 ```
 PUT /categories/:id
 Authorization: Bearer <token>
 ```
 
 #### 3.4 카테고리 삭제
+
 ```
 DELETE /categories/:id
 Authorization: Bearer <token>
@@ -314,15 +342,18 @@ Authorization: Bearer <token>
 ### 4. 태그 관리 API (US-007)
 
 #### 4.1 태그 목록 조회
+
 ```
 GET /tags?search=검색어
 Authorization: Bearer <token>
 ```
 
 **쿼리 파라미터:**
+
 - `search`: 태그명 검색 (선택사항)
 
 **응답:**
+
 ```json
 {
   "success": true,
@@ -341,12 +372,14 @@ Authorization: Bearer <token>
 ```
 
 #### 4.2 태그 생성
+
 ```
 POST /tags
 Authorization: Bearer <token>
 ```
 
 #### 4.3 태그 삭제
+
 ```
 DELETE /tags/:id
 Authorization: Bearer <token>
@@ -355,12 +388,14 @@ Authorization: Bearer <token>
 ### 5. 검색 API (US-008)
 
 #### 5.1 통합 검색
+
 ```
 GET /search?q=검색어&type=all&page=1&limit=20
 Authorization: Bearer <token>
 ```
 
 **쿼리 파라미터:**
+
 - `q`: 검색어 (필수)
 - `type`: 검색 범위 (all, bookmarks, categories, tags) (기본값: all)
 - `page`, `limit`: 페이지네이션
@@ -368,12 +403,14 @@ Authorization: Bearer <token>
 ### 6. 통계 API (US-011)
 
 #### 6.1 사용자 통계 조회
+
 ```
 GET /stats/dashboard
 Authorization: Bearer <token>
 ```
 
 **응답:**
+
 ```json
 {
   "success": true,
@@ -407,15 +444,15 @@ Authorization: Bearer <token>
 
 ## 에러 코드 정의
 
-| 코드 | HTTP 상태 | 설명 |
-|------|-----------|------|
-| `VALIDATION_ERROR` | 400 | 입력값 검증 실패 |
-| `UNAUTHORIZED` | 401 | 인증 토큰 없음 또는 만료 |
-| `FORBIDDEN` | 403 | 접근 권한 없음 |
-| `NOT_FOUND` | 404 | 리소스를 찾을 수 없음 |
-| `CONFLICT` | 409 | 중복된 리소스 |
-| `RATE_LIMIT_EXCEEDED` | 429 | 요청 횟수 제한 초과 |
-| `INTERNAL_ERROR` | 500 | 서버 내부 오류 |
+| 코드                  | HTTP 상태 | 설명                     |
+| --------------------- | --------- | ------------------------ |
+| `VALIDATION_ERROR`    | 400       | 입력값 검증 실패         |
+| `UNAUTHORIZED`        | 401       | 인증 토큰 없음 또는 만료 |
+| `FORBIDDEN`           | 403       | 접근 권한 없음           |
+| `NOT_FOUND`           | 404       | 리소스를 찾을 수 없음    |
+| `CONFLICT`            | 409       | 중복된 리소스            |
+| `RATE_LIMIT_EXCEEDED` | 429       | 요청 횟수 제한 초과      |
+| `INTERNAL_ERROR`      | 500       | 서버 내부 오류           |
 
 ## 보안 고려사항
 

@@ -53,7 +53,7 @@ describe('북마크 API 간단 테스트', () => {
     await prisma.tag.deleteMany({});
     await prisma.category.deleteMany({});
     await prisma.user.deleteMany({});
-    
+
     await app.close();
   });
 
@@ -89,10 +89,7 @@ describe('북마크 API 간단 테스트', () => {
         personalTitle: '인증 없음',
       };
 
-      const response = await request(app.server)
-        .post('/bookmarks')
-        .send(bookmarkData)
-        .expect(401);
+      const response = await request(app.server).post('/bookmarks').send(bookmarkData).expect(401);
 
       expect(response.body.success).toBe(false);
       expect(response.body.error.code).toBe('UNAUTHORIZED');
@@ -163,9 +160,7 @@ describe('북마크 API 간단 테스트', () => {
     });
 
     it('인증 없이 요청 시 401 에러', async () => {
-      const response = await request(app.server)
-        .get('/bookmarks')
-        .expect(401);
+      const response = await request(app.server).get('/bookmarks').expect(401);
 
       expect(response.body.success).toBe(false);
       expect(response.body.error.code).toBe('UNAUTHORIZED');
