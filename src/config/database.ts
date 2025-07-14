@@ -13,11 +13,16 @@ declare global {
 
 // 데이터베이스 클라이언트 생성 함수
 const createPrismaClient = () => {
+  // 테스트 환경에서는 TEST_DATABASE_URL 사용
+  const databaseUrl = process.env.NODE_ENV === 'test' 
+    ? (process.env.TEST_DATABASE_URL || env.DATABASE_URL)
+    : env.DATABASE_URL;
+  
   return new PrismaClient({
     log: isDevelopment ? ['query', 'info', 'warn', 'error'] : ['error'],
     datasources: {
       db: {
-        url: env.DATABASE_URL,
+        url: databaseUrl,
       },
     },
   });

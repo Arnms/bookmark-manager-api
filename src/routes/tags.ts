@@ -35,6 +35,7 @@ export default async function tagsRoutes(app: FastifyInstance) {
         ...(search && {
           name: {
             contains: search,
+            mode: 'insensitive' as const,
           },
         }),
       };
