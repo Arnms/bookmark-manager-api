@@ -150,3 +150,30 @@ The project is in early development stage with basic server setup. Database sche
 - **Language**: Korean developer - use Korean for documentation and code comments
 - **Documentation**: All docs and comments should be written in Korean
 - **Code Style**: Follow Korean naming conventions where applicable
+
+## Git Commit Convention
+
+작업 내용을 기능별로 구분하여 커밋하며, 다음 형식을 따른다:
+
+```
+커밋 제목 (한 줄 요약)
+
+- 세부 변경사항 1
+- 세부 변경사항 2
+- 세부 변경사항 3
+```
+
+**예시:**
+```
+북마크 API 테스트 코드 추가
+
+- 북마크 생성, 조회, 삭제 API 테스트 구현
+- 인증 및 권한 검증 테스트
+- 에러 케이스 테스트 포함
+```
+
+**주의사항:**
+- Claude Code 관련 내용은 작성하지 않음
+- 기능별로 구분하여 별도 커밋 작성
+- 한국어로 작성
+- 간결하고 명확한 설명

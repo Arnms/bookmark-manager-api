@@ -278,6 +278,73 @@ DELETE /bookmarks/:id
 Authorization: Bearer <token>
 ```
 
+#### 2.6 북마크에 태그 추가
+
+```
+POST /bookmarks/:id/tags
+Authorization: Bearer <token>
+```
+
+**요청 본문:**
+
+```json
+{
+  "tagIds": ["tag_123", "tag_456"]
+}
+```
+
+**응답:**
+
+```json
+{
+  "success": true,
+  "data": null,
+  "message": "태그가 성공적으로 추가되었습니다"
+}
+```
+
+#### 2.7 북마크에서 태그 제거
+
+```
+DELETE /bookmarks/:id/tags/:tagId
+Authorization: Bearer <token>
+```
+
+**응답:**
+
+```json
+{
+  "success": true,
+  "data": null,
+  "message": "태그가 성공적으로 제거되었습니다"
+}
+```
+
+#### 2.8 북마크 카테고리 변경
+
+```
+PATCH /bookmarks/:id/category
+Authorization: Bearer <token>
+```
+
+**요청 본문:**
+
+```json
+{
+  "categoryId": "category_456" // null로 설정하면 카테고리 제거
+}
+```
+
+**응답:**
+
+```json
+{
+  "success": true,
+  "data": null,
+  "message": "카테고리가 성공적으로 변경되었습니다"
+}
+```
+
 ### 3. 카테고리 관리 API (US-006)
 
 #### 3.1 카테고리 생성
@@ -297,12 +364,35 @@ Authorization: Bearer <token>
 }
 ```
 
+**응답:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "category_123",
+    "name": "개발 참고",
+    "description": "개발 관련 북마크",
+    "color": "#FF5733",
+    "userId": "user_123",
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  },
+  "message": "카테고리가 생성되었습니다"
+}
+```
+
 #### 3.2 카테고리 목록 조회
 
 ```
-GET /categories
+GET /categories?page=1&limit=10
 Authorization: Bearer <token>
 ```
+
+**쿼리 파라미터:**
+
+- `page`: 페이지 번호 (기본값: 1)
+- `limit`: 페이지당 항목 수 (기본값: 10, 최대: 100)
 
 **응답:**
 
@@ -316,27 +406,94 @@ Authorization: Bearer <token>
         "name": "개발 참고",
         "description": "개발 관련 북마크",
         "color": "#FF5733",
-        "bookmarkCount": 15,
+        "_count": {
+          "bookmarks": 15
+        },
         "createdAt": "2025-01-01T00:00:00.000Z"
       }
-    ]
-  },
-  "message": "카테고리 목록을 조회했습니다"
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "total": 5,
+      "totalPages": 1
+    }
+  }
 }
 ```
 
-#### 3.3 카테고리 수정
+#### 3.3 카테고리 단일 조회
+
+```
+GET /categories/:id
+Authorization: Bearer <token>
+```
+
+**응답:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "category_123",
+    "name": "개발 참고",
+    "description": "개발 관련 북마크",
+    "color": "#FF5733",
+    "_count": {
+      "bookmarks": 15
+    },
+    "createdAt": "2025-01-01T00:00:00.000Z"
+  }
+}
+```
+
+#### 3.4 카테고리 수정
 
 ```
 PUT /categories/:id
 Authorization: Bearer <token>
 ```
 
-#### 3.4 카테고리 삭제
+**요청 본문:**
+
+```json
+{
+  "name": "수정된 카테고리명",
+  "description": "수정된 설명",
+  "color": "#00FF00"
+}
+```
+
+**응답:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "category_123",
+    "name": "수정된 카테고리명",
+    "description": "수정된 설명",
+    "color": "#00FF00",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  }
+}
+```
+
+#### 3.5 카테고리 삭제
 
 ```
 DELETE /categories/:id
 Authorization: Bearer <token>
+```
+
+**응답:**
+
+```json
+{
+  "success": true,
+  "data": null,
+  "message": "카테고리가 성공적으로 삭제되었습니다"
+}
 ```
 
 ### 4. 태그 관리 API (US-007)
@@ -344,12 +501,14 @@ Authorization: Bearer <token>
 #### 4.1 태그 목록 조회
 
 ```
-GET /tags?search=검색어
+GET /tags?page=1&limit=10&search=검색어
 Authorization: Bearer <token>
 ```
 
 **쿼리 파라미터:**
 
+- `page`: 페이지 번호 (기본값: 1)
+- `limit`: 페이지당 항목 수 (기본값: 10, 최대: 100)
 - `search`: 태그명 검색 (선택사항)
 
 **응답:**
@@ -362,27 +521,165 @@ Authorization: Bearer <token>
       {
         "id": "tag_123",
         "name": "개발",
-        "bookmarkCount": 25,
+        "_count": {
+          "bookmarks": 25
+        },
         "createdAt": "2025-01-01T00:00:00.000Z"
       }
-    ]
-  },
-  "message": "태그 목록을 조회했습니다"
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "total": 15,
+      "totalPages": 2
+    }
+  }
 }
 ```
 
-#### 4.2 태그 생성
+#### 4.2 태그 단일 조회
+
+```
+GET /tags/:id
+Authorization: Bearer <token>
+```
+
+**응답:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "tag_123",
+    "name": "개발",
+    "_count": {
+      "bookmarks": 25
+    },
+    "createdAt": "2025-01-01T00:00:00.000Z"
+  }
+}
+```
+
+#### 4.3 태그 생성
 
 ```
 POST /tags
 Authorization: Bearer <token>
 ```
 
-#### 4.3 태그 삭제
+**요청 본문:**
+
+```json
+{
+  "name": "새 태그명"
+}
+```
+
+**응답:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "tag_123",
+    "name": "새 태그명",
+    "userId": "user_123",
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  }
+}
+```
+
+#### 4.4 태그 수정
+
+```
+PUT /tags/:id
+Authorization: Bearer <token>
+```
+
+**요청 본문:**
+
+```json
+{
+  "name": "수정된 태그명"
+}
+```
+
+**응답:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "tag_123",
+    "name": "수정된 태그명",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  }
+}
+```
+
+#### 4.5 태그 삭제
 
 ```
 DELETE /tags/:id
 Authorization: Bearer <token>
+```
+
+**응답:**
+
+```json
+{
+  "success": true,
+  "data": null,
+  "message": "태그가 성공적으로 삭제되었습니다"
+}
+```
+
+#### 4.6 태그별 북마크 목록 조회
+
+```
+GET /tags/:id/bookmarks?page=1&limit=10
+Authorization: Bearer <token>
+```
+
+**쿼리 파라미터:**
+
+- `page`: 페이지 번호 (기본값: 1)
+- `limit`: 페이지당 항목 수 (기본값: 10, 최대: 100)
+
+**응답:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "tag": {
+      "id": "tag_123",
+      "name": "개발"
+    },
+    "bookmarks": [
+      {
+        "id": "bookmark_123",
+        "personalTitle": "개발 참고 자료",
+        "personalNote": "유용한 개발 자료",
+        "isPublic": false,
+        "websiteMetadata": {
+          "url": "https://example.com",
+          "title": "Example Site",
+          "description": "개발 관련 예제 사이트",
+          "favicon": "https://example.com/favicon.ico"
+        },
+        "createdAt": "2025-01-01T00:00:00.000Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "total": 25,
+      "totalPages": 3
+    }
+  }
+}
 ```
 
 ### 5. 검색 API (US-008)
