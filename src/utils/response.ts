@@ -77,3 +77,17 @@ export function createPaginatedResponse<T = any>(
     pagination,
   };
 }
+
+/**
+ * 성공 응답 생성 (간편 함수)
+ */
+export function success<T = any>(data: T, message: string = '요청이 성공했습니다.'): ApiResponse<T> {
+  return createResponse(true, message, data);
+}
+
+/**
+ * 에러 응답 생성 (간편 함수)
+ */
+export function error(message: string, code: string = 'UNKNOWN_ERROR'): ApiResponse<null> {
+  return createErrorResponse(message, code);
+}
