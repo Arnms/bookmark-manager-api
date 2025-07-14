@@ -68,6 +68,12 @@ export async function buildApp(): Promise<FastifyInstance> {
   // 북마크 라우트
   await app.register(import('./routes/bookmarks'), { prefix: '/bookmarks' });
 
+  // 카테고리 라우트
+  await app.register(import('./routes/categories'), { prefix: '/categories' });
+
+  // 태그 라우트
+  await app.register(import('./routes/tags'), { prefix: '/tags' });
+
   // === 기본 헬스체크 라우트 ===
   app.get('/health', async (request, reply) => {
     return {
