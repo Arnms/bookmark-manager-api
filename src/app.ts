@@ -65,6 +65,9 @@ export async function buildApp(): Promise<FastifyInstance> {
   // 인증 라우트
   await app.register(import('./routes/auth'), { prefix: '/auth' });
 
+  // 북마크 라우트
+  await app.register(import('./routes/bookmarks'), { prefix: '/bookmarks' });
+
   // === 기본 헬스체크 라우트 ===
   app.get('/health', async (request, reply) => {
     return {
