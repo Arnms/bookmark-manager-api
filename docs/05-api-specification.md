@@ -4,7 +4,7 @@
 
 이 문서는 북마크 관리 시스템의 RESTful API 명세를 정의합니다. 모든 API는 JSON 형식으로 요청/응답하며, JWT 토큰 기반 인증을 사용합니다.
 
-**기본 URL**: `http://localhost:3000/api/v1`
+**기본 URL**: `http://localhost:3000`
 
 ## 인증 방식
 
@@ -230,7 +230,7 @@ Authorization: Bearer <token>
 #### 2.2 북마크 목록 조회
 
 ```
-GET /bookmarks?page=1&limit=20&categoryId=category_123&tags=개발,참고자료&search=검색어&sort=createdAt&order=desc
+GET /bookmarks?page=1&limit=20&categoryId=category_123&tags=개발,참고자료&search=검색어
 Authorization: Bearer <token>
 ```
 
@@ -241,9 +241,9 @@ Authorization: Bearer <token>
 - `categoryId`: 카테고리 필터 (선택사항)
 - `tags`: 태그 필터, 쉼표로 구분 (선택사항)
 - `search`: 제목, URL, 메모에서 검색 (선택사항)
-- `sort`: 정렬 기준 (createdAt, updatedAt, title) (기본값: createdAt)
-- `order`: 정렬 순서 (asc, desc) (기본값: desc)
 - `isPublic`: 공개 여부 필터 (선택사항)
+
+> ⚠️ **정렬 기능**: `sort`, `order` 파라미터는 현재 미구현 상태입니다. 기본적으로 `createdAt desc` 순으로 정렬됩니다.
 
 #### 2.3 북마크 상세 조회
 
@@ -698,6 +698,8 @@ Authorization: Bearer <token>
 - `page`, `limit`: 페이지네이션
 
 ### 6. 통계 API (US-011)
+
+> ⚠️ **구현 예정**: 이 기능은 현재 개발 중이며, 향후 버전에서 제공될 예정입니다.
 
 #### 6.1 사용자 통계 조회
 
