@@ -39,8 +39,8 @@ describe('Categories API', () => {
     });
 
     const loginData = JSON.parse(loginResponse.payload);
-    authToken = loginData.token;
-    userId = loginData.user.id;
+    authToken = loginData.data.token;
+    userId = loginData.data.user.id;
   });
 
   afterAll(async () => {
