@@ -294,7 +294,7 @@ describe('북마크 API 테스트', () => {
         .expect(404);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.error.code).toBe('NOT_FOUND');
+      expect(response.body.error.code).toBe('BOOKMARK_NOT_FOUND');
     });
 
     it('인증 없이 요청 시 401 에러', async () => {
@@ -376,7 +376,7 @@ describe('북마크 API 테스트', () => {
         .expect(404);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.error.code).toBe('NOT_FOUND');
+      expect(response.body.error.code).toBe('BOOKMARK_NOT_FOUND');
     });
 
     it('인증 없이 요청 시 401 에러', async () => {
@@ -442,7 +442,7 @@ describe('북마크 API 테스트', () => {
         .expect(404);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.error.code).toBe('NOT_FOUND');
+      expect(response.body.error.code).toBe('BOOKMARK_NOT_FOUND');
     });
 
     it('인증 없이 요청 시 401 에러', async () => {
@@ -503,7 +503,7 @@ describe('북마크 API 테스트', () => {
         .expect(404);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.error.code).toBe('NOT_FOUND');
+      expect(response.body.error.code).toBe('BOOKMARK_NOT_FOUND');
     });
 
     it('다른 사용자의 북마크 수정 시 404 에러', async () => {
@@ -518,7 +518,7 @@ describe('북마크 API 테스트', () => {
         .expect(404);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.error.code).toBe('NOT_FOUND');
+      expect(response.body.error.code).toBe('BOOKMARK_NOT_FOUND');
     });
 
     it('다른 사용자의 북마크 삭제 시 404 에러', async () => {
@@ -528,7 +528,7 @@ describe('북마크 API 테스트', () => {
         .expect(404);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.error.code).toBe('NOT_FOUND');
+      expect(response.body.error.code).toBe('BOOKMARK_NOT_FOUND');
     });
   });
 });
