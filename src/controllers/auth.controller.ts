@@ -100,16 +100,16 @@ export class AuthController {
   /**
    * 에러 처리 헬퍼 메서드
    */
-  private handleError(error: unknown, reply: FastifyReply, logger: any) {
-    if (error instanceof z.ZodError) {
+  private handleError(err: unknown, reply: FastifyReply, logger: any) {
+    if (err instanceof z.ZodError) {
       return reply.status(400).send(error('입력 데이터가 유효하지 않습니다.', 'VALIDATION_ERROR'));
     }
 
-    if (error instanceof AuthError) {
-      return reply.status(error.statusCode).send(error(error.message, error.code));
+    if (err instanceof AuthError) {
+      return reply.status(err.statusCode).send(error(err.message, err.code));
     }
 
-    logger.error(error);
+    logger.error(err);
     return reply.status(500).send(error('서버 오류가 발생했습니다.', 'INTERNAL_ERROR'));
   }
 }

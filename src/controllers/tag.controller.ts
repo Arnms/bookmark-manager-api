@@ -11,10 +11,10 @@ export class TagController {
     this.tagService = tagService
   }
 
-  async createTag(request: FastifyRequest<{ Body: CreateTagType }>, reply: FastifyReply) {
+  async createTag(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request as any).user.userId
-      const tagData = request.body
+      const tagData = request.body as any
 
       const tag = await this.tagService.createTag(userId, tagData)
 
@@ -27,10 +27,10 @@ export class TagController {
     }
   }
 
-  async getTags(request: FastifyRequest<{ Querystring: TagsQueryType }>, reply: FastifyReply) {
+  async getTags(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request as any).user.userId
-      const queryParams = request.query
+      const queryParams = request.query as any
 
       const result = await this.tagService.getTags(userId, queryParams)
 
@@ -43,10 +43,10 @@ export class TagController {
     }
   }
 
-  async getTagById(request: FastifyRequest<{ Params: TagIdParamsType }>, reply: FastifyReply) {
+  async getTagById(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request as any).user.userId
-      const { id } = request.params
+      const { id } = request.params as { id: string }
 
       const tag = await this.tagService.getTagById(userId, id)
 
@@ -59,11 +59,11 @@ export class TagController {
     }
   }
 
-  async updateTag(request: FastifyRequest<{ Params: TagIdParamsType; Body: UpdateTagType }>, reply: FastifyReply) {
+  async updateTag(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request as any).user.userId
-      const { id } = request.params
-      const updateData = request.body
+      const { id } = request.params as { id: string }
+      const updateData = request.body as any
 
       const tag = await this.tagService.updateTag(userId, id, updateData)
 
@@ -76,10 +76,10 @@ export class TagController {
     }
   }
 
-  async deleteTag(request: FastifyRequest<{ Params: TagIdParamsType }>, reply: FastifyReply) {
+  async deleteTag(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request as any).user.userId
-      const { id } = request.params
+      const { id } = request.params as { id: string }
 
       await this.tagService.deleteTag(userId, id)
 
@@ -92,11 +92,11 @@ export class TagController {
     }
   }
 
-  async getTagWithBookmarks(request: FastifyRequest<{ Params: TagIdParamsType; Querystring: TagBookmarksQueryType }>, reply: FastifyReply) {
+  async getTagWithBookmarks(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request as any).user.userId
-      const { id } = request.params
-      const { page = 1, limit = 20 } = request.query
+      const { id } = request.params as { id: string }
+      const { page = 1, limit = 20 } = request.query as { page?: number; limit?: number }
 
       const result = await this.tagService.getTagWithBookmarks(userId, id, page, limit)
 

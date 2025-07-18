@@ -59,7 +59,7 @@ export class CategoryService {
   /**
    * 사용자별 카테고리 목록 조회
    */
-  async getCategoriesByUserId(userId: string, skip: number, take: number): Promise<CategoryListResponse> {
+  async getCategoriesByUserId(userId: string, skip: number, take: number): Promise<{ categories: CategoryResponse[], total: number }> {
     const [categories, total] = await Promise.all([
       prisma.category.findMany({
         where: { userId },

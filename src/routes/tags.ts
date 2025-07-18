@@ -22,38 +22,26 @@ export default async function tagsRoutes(app: FastifyInstance) {
 
   app.get('/', {
     schema: {
-      querystring: TagsQuerySchema,
-      response: {
-        200: TagsResponseSchema
-      }
+      querystring: TagsQuerySchema
     }
   }, tagController.getTags.bind(tagController))
 
   app.get('/:id', {
     schema: {
-      params: TagIdParamsSchema,
-      response: {
-        200: TagSchema
-      }
+      params: TagIdParamsSchema
     }
   }, tagController.getTagById.bind(tagController))
 
   app.post('/', {
     schema: {
-      body: CreateTagSchema,
-      response: {
-        201: TagSchema
-      }
+      body: CreateTagSchema
     }
   }, tagController.createTag.bind(tagController))
 
   app.put('/:id', {
     schema: {
       params: TagIdParamsSchema,
-      body: UpdateTagSchema,
-      response: {
-        200: TagSchema
-      }
+      body: UpdateTagSchema
     }
   }, tagController.updateTag.bind(tagController))
 
@@ -66,10 +54,7 @@ export default async function tagsRoutes(app: FastifyInstance) {
   app.get('/:id/bookmarks', {
     schema: {
       params: TagIdParamsSchema,
-      querystring: TagBookmarksQuerySchema,
-      response: {
-        200: TagWithBookmarksSchema
-      }
+      querystring: TagBookmarksQuerySchema
     }
   }, tagController.getTagWithBookmarks.bind(tagController))
 }

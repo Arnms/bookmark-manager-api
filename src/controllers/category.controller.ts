@@ -6,10 +6,10 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { categoryService, CategoryError } from '../services/category.service';
 import { 
-  CreateCategoryRequest, 
-  UpdateCategoryRequest, 
-  GetCategoriesQuery,
-  CategoryParamsRequest 
+  createCategorySchema,
+  updateCategorySchema,
+  getCategoriesSchema,
+  categoryParamsSchema
 } from '../schemas/category.schema';
 import { success, error } from '../utils/response';
 
@@ -18,12 +18,10 @@ export class CategoryController {
   /**
    * 카테고리 목록 조회
    */
-  async getCategories(
-    request: FastifyRequest<{ Querystring: GetCategoriesQuery }>,
-    reply: FastifyReply
-  ) {
+  async getCategories(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { page, limit } = request.query;
+      const queryResult = getCategoriesSchema.parse(request.query);
+      const { page, limit } = queryResult;
       const userId = (request.user as any).userId;
       const skip = (page - 1) * limit;
 
@@ -47,12 +45,9 @@ export class CategoryController {
   /**
    * 카테고리 단일 조회
    */
-  async getCategoryById(
-    request: FastifyRequest<{ Params: CategoryParamsRequest }>,
-    reply: FastifyReply
-  ) {
+  async getCategoryById(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { id } = request.params;
+      const { id } = request.params as { id: string };
       const userId = (request.user as any).userId;
 
       const category = await categoryService.getCategoryById(id, userId);
@@ -70,13 +65,11 @@ export class CategoryController {
   /**
    * 카테고리 생성
    */
-  async createCategory(
-    request: FastifyRequest<{ Body: CreateCategoryRequest }>,
-    reply: FastifyReply
-  ) {
+  async createCategory(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request.user as any).userId;
-      const category = await categoryService.createCategory(userId, request.body);
+      const categoryData = createCategorySchema.parse(request.body);
+      const category = await categoryService.createCategory(userId, categoryData);
 
       return reply.code(201).send(success(category));
     } catch (err: any) {
@@ -90,15 +83,13 @@ export class CategoryController {
   /**
    * 카테고리 수정
    */
-  async updateCategory(
-    request: FastifyRequest<{ Params: CategoryParamsRequest; Body: UpdateCategoryRequest }>,
-    reply: FastifyReply
-  ) {
+  async updateCategory(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { id } = request.params;
+      const { id } = request.params as { id: string };
       const userId = (request.user as any).userId;
+      const updateData = updateCategorySchema.parse(request.body);
 
-      const category = await categoryService.updateCategory(id, userId, request.body);
+      const category = await categoryService.updateCategory(id, userId, updateData);
 
       return reply.code(200).send(success(category));
     } catch (err: any) {
@@ -115,12 +106,9 @@ export class CategoryController {
   /**
    * 카테고리 삭제
    */
-  async deleteCategory(
-    request: FastifyRequest<{ Params: CategoryParamsRequest }>,
-    reply: FastifyReply
-  ) {
+  async deleteCategory(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { id } = request.params;
+      const { id } = request.params as { id: string };
       const userId = (request.user as any).userId;
 
       await categoryService.deleteCategory(id, userId);

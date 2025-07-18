@@ -15,55 +15,13 @@ import {
 } from '../schemas/bookmark.schema';
 import { success, error } from '../utils/response';
 
-// === 타입 정의 ===
-type CreateBookmarkRequest = FastifyRequest<{
-  Body: z.infer<typeof createBookmarkSchema>;
-}>;
-
-type GetBookmarksRequest = FastifyRequest<{
-  Querystring: z.infer<typeof getBookmarksSchema>;
-}>;
-
-type GetBookmarkByIdRequest = FastifyRequest<{
-  Params: { id: string };
-}>;
-
-type UpdateBookmarkRequest = FastifyRequest<{
-  Params: { id: string };
-  Body: z.infer<typeof updateBookmarkSchema>;
-}>;
-
-type DeleteBookmarkRequest = FastifyRequest<{
-  Params: { id: string };
-}>;
-
-type AddTagsToBookmarkRequest = FastifyRequest<{
-  Params: { id: string };
-  Body: z.infer<typeof addTagsToBookmarkSchema>;
-}>;
-
-type RemoveTagFromBookmarkRequest = FastifyRequest<{
-  Params: { id: string; tagId: string };
-}>;
-
-type UpdateBookmarkCategoryRequest = FastifyRequest<{
-  Params: { id: string };
-  Body: z.infer<typeof updateBookmarkCategorySchema>;
-}>;
-
-type AuthenticatedRequest = FastifyRequest & {
-  user: {
-    userId: string;
-    email: string;
-  };
-};
 
 // === 북마크 컨트롤러 클래스 ===
 export class BookmarkController {
   /**
    * 북마크 생성
    */
-  async createBookmark(request: CreateBookmarkRequest, reply: FastifyReply) {
+  async createBookmark(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request as any).user.userId;
       const bookmarkData = createBookmarkSchema.parse(request.body);
@@ -79,7 +37,7 @@ export class BookmarkController {
   /**
    * 북마크 목록 조회
    */
-  async getBookmarks(request: GetBookmarksRequest, reply: FastifyReply) {
+  async getBookmarks(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request as any).user.userId;
       const query = getBookmarksSchema.parse(request.query);
@@ -99,10 +57,10 @@ export class BookmarkController {
   /**
    * 북마크 단일 조회
    */
-  async getBookmarkById(request: GetBookmarkByIdRequest, reply: FastifyReply) {
+  async getBookmarkById(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request as any).user.userId;
-      const { id } = request.params;
+      const { id } = request.params as { id: string };
 
       const bookmark = await bookmarkService.getBookmarkById(userId, id);
 
@@ -119,10 +77,10 @@ export class BookmarkController {
   /**
    * 북마크 수정
    */
-  async updateBookmark(request: UpdateBookmarkRequest, reply: FastifyReply) {
+  async updateBookmark(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request as any).user.userId;
-      const { id } = request.params;
+      const { id } = request.params as { id: string };
       const updateData = updateBookmarkSchema.parse(request.body);
 
       const bookmark = await bookmarkService.updateBookmark(userId, id, updateData);
@@ -140,10 +98,10 @@ export class BookmarkController {
   /**
    * 북마크 삭제
    */
-  async deleteBookmark(request: DeleteBookmarkRequest, reply: FastifyReply) {
+  async deleteBookmark(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request as any).user.userId;
-      const { id } = request.params;
+      const { id } = request.params as { id: string };
 
       await bookmarkService.deleteBookmark(userId, id);
 
@@ -160,10 +118,10 @@ export class BookmarkController {
   /**
    * 북마크에 태그 추가
    */
-  async addTagsToBookmark(request: AddTagsToBookmarkRequest, reply: FastifyReply) {
+  async addTagsToBookmark(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request as any).user.userId;
-      const { id } = request.params;
+      const { id } = request.params as { id: string };
       const tagData = addTagsToBookmarkSchema.parse(request.body);
 
       await bookmarkService.addTagsToBookmark(userId, id, tagData);
@@ -181,10 +139,10 @@ export class BookmarkController {
   /**
    * 북마크에서 태그 제거
    */
-  async removeTagFromBookmark(request: RemoveTagFromBookmarkRequest, reply: FastifyReply) {
+  async removeTagFromBookmark(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request as any).user.userId;
-      const { id, tagId } = request.params;
+      const { id, tagId } = request.params as { id: string; tagId: string };
 
       await bookmarkService.removeTagFromBookmark(userId, id, tagId);
 
@@ -201,10 +159,10 @@ export class BookmarkController {
   /**
    * 북마크 카테고리 변경
    */
-  async updateBookmarkCategory(request: UpdateBookmarkCategoryRequest, reply: FastifyReply) {
+  async updateBookmarkCategory(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userId = (request as any).user.userId;
-      const { id } = request.params;
+      const { id } = request.params as { id: string };
       const categoryData = updateBookmarkCategorySchema.parse(request.body);
 
       await bookmarkService.updateBookmarkCategory(userId, id, categoryData);
@@ -222,16 +180,16 @@ export class BookmarkController {
   /**
    * 에러 처리 헬퍼 메서드
    */
-  private handleError(error: unknown, reply: FastifyReply, logger: any) {
-    if (error instanceof z.ZodError) {
+  private handleError(err: unknown, reply: FastifyReply, logger: any) {
+    if (err instanceof z.ZodError) {
       return reply.status(400).send(error('입력 데이터가 유효하지 않습니다.', 'VALIDATION_ERROR'));
     }
 
-    if (error instanceof BookmarkError) {
-      return reply.status(error.statusCode).send(error(error.message, error.code));
+    if (err instanceof BookmarkError) {
+      return reply.status(err.statusCode).send(error(err.message, err.code));
     }
 
-    logger.error(error);
+    logger.error(err);
     return reply.status(500).send(error('서버 오류가 발생했습니다.', 'INTERNAL_SERVER_ERROR'));
   }
 }

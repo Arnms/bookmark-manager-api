@@ -63,6 +63,9 @@ describe('Tags API', () => {
         },
       });
 
+      if (response.statusCode !== 201) {
+        console.log('Response:', response.payload);
+      }
       expect(response.statusCode).toBe(201);
       
       const data = JSON.parse(response.payload);
@@ -111,7 +114,7 @@ describe('Tags API', () => {
       expect(response.statusCode).toBe(400);
       const data = JSON.parse(response.payload);
       expect(data.success).toBe(false);
-      expect(data.message).toBe('이미 존재하는 태그명입니다');
+      expect(data.message).toBe('이미 존재하는 태그입니다');
     });
 
     test('태그 생성 - 인증 토큰 없음', async () => {
@@ -427,9 +430,9 @@ describe('Tags API', () => {
       
       const data = JSON.parse(response.payload);
       expect(data.success).toBe(true);
-      expect(data.data.tag.name).toBe('JavaScript');
+      expect(data.data.name).toBe('JavaScript');
       expect(data.data.bookmarks).toHaveLength(1);
-      expect(data.data.bookmarks[0].personalTitle).toBe('JS 튜토리얼');
+      expect(data.data.bookmarks[0].title).toBe('JS 튜토리얼');
     });
 
     test('태그별 북마크 목록 조회 - 존재하지 않는 태그', async () => {
