@@ -39,14 +39,6 @@ interface Category {
   updatedAt: Date;
 }
 
-interface Tag {
-  id: string;
-  name: string;
-  userId: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 interface WebsiteMetadata {
   id: string;
   url: string;
@@ -108,7 +100,13 @@ export interface BookmarkWithDetails extends Bookmark {
   websiteMetadata: WebsiteMetadata;
   category?: Category | null;
   tags: Array<{
-    tag: Tag;
+    tag: {
+      id: string;
+      name: string;
+      userId: string;
+      createdAt: Date;
+      updatedAt: Date;
+    };
   }>;
 }
 
