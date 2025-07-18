@@ -102,7 +102,7 @@ export class AuthController {
    */
   private handleError(err: unknown, reply: FastifyReply, logger: any) {
     if (err instanceof z.ZodError) {
-      return reply.status(400).send(error('입력 데이터가 유효하지 않습니다.', 'VALIDATION_ERROR'));
+      return reply.status(400).send(error('입력 데이터가 유효하지 않습니다.', 'VALIDATION_ERROR', err.issues));
     }
 
     if (err instanceof AuthError) {

@@ -48,6 +48,22 @@ export class CategoryService {
    * 카테고리 생성
    */
   async createCategory(userId: string, data: CreateCategoryRequest): Promise<CategoryResponse> {
+    // 중복 이름 검증
+    const existingCategory = await prisma.category.findFirst({
+      where: {
+        userId,
+        name: data.name,
+      },
+    });
+
+    if (existingCategory) {
+      throw new CategoryError(
+        '이미 존재하는 카테고리명입니다',
+        'CATEGORY_ALREADY_EXISTS',
+        400
+      );
+    }
+
     return await prisma.category.create({
       data: {
         ...data,
@@ -104,7 +120,7 @@ export class CategoryService {
 
     if (!existingCategory) {
       throw new CategoryError(
-        '카테고리를 찾을 수 없습니다.',
+        '카테고리를 찾을 수 없습니다',
         'CATEGORY_NOT_FOUND',
         404
       );
@@ -126,7 +142,7 @@ export class CategoryService {
 
     if (!existingCategory) {
       throw new CategoryError(
-        '카테고리를 찾을 수 없습니다.',
+        '카테고리를 찾을 수 없습니다',
         'CATEGORY_NOT_FOUND',
         404
       );

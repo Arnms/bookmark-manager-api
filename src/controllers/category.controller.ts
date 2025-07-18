@@ -12,6 +12,7 @@ import {
   categoryParamsSchema
 } from '../schemas/category.schema';
 import { success, error } from '../utils/response';
+import { z } from 'zod';
 
 // === 카테고리 컨트롤러 클래스 ===
 export class CategoryController {
@@ -73,6 +74,12 @@ export class CategoryController {
 
       return reply.code(201).send(success(category));
     } catch (err: any) {
+      if (err instanceof z.ZodError) {
+        return reply.code(400).send(error('입력 데이터가 유효하지 않습니다.', 'VALIDATION_ERROR', err.issues));
+      }
+      if (err instanceof CategoryError) {
+        return reply.code(err.statusCode).send(error(err.message));
+      }
       if (err.code === 'P2002') {
         return reply.code(400).send(error('이미 존재하는 카테고리명입니다.'));
       }
@@ -113,7 +120,7 @@ export class CategoryController {
 
       await categoryService.deleteCategory(id, userId);
 
-      return reply.code(200).send(success(null, '카테고리가 성공적으로 삭제되었습니다.'));
+      return reply.code(200).send(success(null, '카테고리가 성공적으로 삭제되었습니다'));
     } catch (err: any) {
       if (err instanceof CategoryError) {
         return reply.code(err.statusCode).send(error(err.message));

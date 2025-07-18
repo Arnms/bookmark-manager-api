@@ -9,6 +9,7 @@ export interface ApiResponse<T = any> {
   error: {
     code: string;
     message: string;
+    details?: any;
   } | null;
   timestamp: string;
 }
@@ -30,6 +31,7 @@ export function createResponse<T = any>(
   message: string,
   data: T | null = null,
   errorCode?: string,
+  details?: any,
 ): ApiResponse<T> {
   return {
     success,
@@ -40,6 +42,7 @@ export function createResponse<T = any>(
       : {
           code: errorCode || 'UNKNOWN_ERROR',
           message,
+          ...(details && { details }),
         },
     timestamp: new Date().toISOString(),
   };
@@ -51,8 +54,9 @@ export function createResponse<T = any>(
 export function createErrorResponse(
   message: string,
   code: string = 'UNKNOWN_ERROR',
+  details?: any,
 ): ApiResponse<null> {
-  return createResponse(false, message, null, code);
+  return createResponse(false, message, null, code, details);
 }
 
 /**
@@ -91,6 +95,6 @@ export function success<T = any>(
 /**
  * 에러 응답 생성 (간편 함수)
  */
-export function error(message: string, code: string = 'UNKNOWN_ERROR'): ApiResponse<null> {
-  return createErrorResponse(message, code);
+export function error(message: string, code: string = 'UNKNOWN_ERROR', details?: any): ApiResponse<null> {
+  return createErrorResponse(message, code, details);
 }

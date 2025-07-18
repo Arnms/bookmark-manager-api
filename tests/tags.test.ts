@@ -39,6 +39,9 @@ describe('Tags API', () => {
     });
 
     const loginData = JSON.parse(loginResponse.payload);
+    if (loginResponse.statusCode !== 200) {
+      console.log('Login failed:', loginResponse.payload);
+    }
     authToken = loginData.data.token;
     userId = loginData.data.user.id;
   });
