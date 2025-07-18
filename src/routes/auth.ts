@@ -5,6 +5,7 @@
 
 import { FastifyInstance } from 'fastify';
 import { authController } from '../controllers/auth.controller';
+import { requireAuth } from '../middleware/auth';
 
 export default async function authRoutes(fastify: FastifyInstance) {
   // === 회원가입 API ===
@@ -17,19 +18,7 @@ export default async function authRoutes(fastify: FastifyInstance) {
   fastify.get(
     '/me',
     {
-      preHandler: async (request, reply) => {
-        try {
-          await request.jwtVerify();
-        } catch (err) {
-          reply.status(401).send({ 
-            success: false,
-            error: {
-              code: 'UNAUTHORIZED',
-              message: '인증이 필요합니다.'
-            }
-          });
-        }
-      },
+      preHandler: requireAuth,
     },
     authController.getMe.bind(authController)
   );

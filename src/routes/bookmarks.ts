@@ -5,31 +5,14 @@
 
 import { FastifyInstance } from 'fastify';
 import { bookmarkController } from '../controllers/bookmark.controller';
-
-/**
- * 사용자 JWT 인증 미들웨어
- */
-async function authenticate(request: any, reply: any) {
-  try {
-    await request.jwtVerify();
-  } catch (err) {
-    reply.status(401).send({ 
-      success: false,
-      error: {
-        code: 'UNAUTHORIZED',
-        message: '인증이 필요합니다.'
-      },
-      timestamp: new Date().toISOString(),
-    });
-  }
-}
+import { requireAuth } from '../middleware/auth';
 
 export default async function bookmarkRoutes(fastify: FastifyInstance) {
   // === 북마크 생성 API ===
   fastify.post(
     '/',
     {
-      preHandler: authenticate,
+      preHandler: requireAuth,
     },
     bookmarkController.createBookmark.bind(bookmarkController)
   );
@@ -38,7 +21,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
   fastify.get(
     '/',
     {
-      preHandler: authenticate,
+      preHandler: requireAuth,
     },
     bookmarkController.getBookmarks.bind(bookmarkController)
   );
@@ -47,7 +30,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
   fastify.get(
     '/:id',
     {
-      preHandler: authenticate,
+      preHandler: requireAuth,
     },
     bookmarkController.getBookmarkById.bind(bookmarkController)
   );
@@ -56,7 +39,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
   fastify.put(
     '/:id',
     {
-      preHandler: authenticate,
+      preHandler: requireAuth,
     },
     bookmarkController.updateBookmark.bind(bookmarkController)
   );
@@ -65,7 +48,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
   fastify.delete(
     '/:id',
     {
-      preHandler: authenticate,
+      preHandler: requireAuth,
     },
     bookmarkController.deleteBookmark.bind(bookmarkController)
   );
@@ -74,7 +57,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
   fastify.post(
     '/:id/tags',
     {
-      preHandler: authenticate,
+      preHandler: requireAuth,
     },
     bookmarkController.addTagsToBookmark.bind(bookmarkController)
   );
@@ -83,7 +66,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
   fastify.delete(
     '/:id/tags/:tagId',
     {
-      preHandler: authenticate,
+      preHandler: requireAuth,
     },
     bookmarkController.removeTagFromBookmark.bind(bookmarkController)
   );
@@ -92,7 +75,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
   fastify.patch(
     '/:id/category',
     {
-      preHandler: authenticate,
+      preHandler: requireAuth,
     },
     bookmarkController.updateBookmarkCategory.bind(bookmarkController)
   );
