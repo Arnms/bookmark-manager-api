@@ -5,6 +5,7 @@
 
 import fastify, { FastifyInstance } from 'fastify';
 import { env, isDevelopment } from './config/env';
+import { success } from './utils/response';
 
 export async function buildApp(): Promise<FastifyInstance> {
   // Fastify 인스턴스 생성
@@ -76,16 +77,11 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   // === 기본 헬스체크 라우트 ===
   app.get('/health', async (request, reply) => {
-    return {
-      success: true,
-      data: {
-        status: 'ok',
-        environment: env.NODE_ENV,
-        timestamp: new Date().toISOString(),
-      },
-      message: '서버가 정상적으로 동작 중입니다',
+    return success({
+      status: 'ok',
+      environment: env.NODE_ENV,
       timestamp: new Date().toISOString(),
-    };
+    }, '서버가 정상적으로 동작 중입니다.');
   });
 
   return app;

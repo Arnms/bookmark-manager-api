@@ -7,6 +7,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { z } from 'zod';
 import { authService, AuthError } from '../services/auth.service';
 import { registerSchema, loginSchema } from '../schemas/auth.schema';
+import { success, error } from '../utils/response';
 
 // === 타입 정의 ===
 type RegisterRequest = FastifyRequest<{
@@ -43,14 +44,10 @@ export class AuthController {
         email: user.email,
       });
 
-      return reply.status(201).send({
-        success: true,
-        message: '회원가입이 완료되었습니다.',
-        data: {
-          user,
-          token,
-        },
-      });
+      return reply.status(201).send(success({
+        user,
+        token,
+      }, '회원가입이 완료되었습니다.'));
     } catch (error) {
       return this.handleError(error, reply, request.server.log);
     }
@@ -73,14 +70,10 @@ export class AuthController {
         email: user.email,
       });
 
-      return reply.status(200).send({
-        success: true,
-        message: '로그인이 완료되었습니다.',
-        data: {
-          user,
-          token,
-        },
-      });
+      return reply.status(200).send(success({
+        user,
+        token,
+      }, '로그인이 완료되었습니다.'));
     } catch (error) {
       return this.handleError(error, reply, request.server.log);
     }
@@ -96,13 +89,9 @@ export class AuthController {
       // 사용자 정보 조회
       const user = await authService.getMe(userId);
 
-      return reply.status(200).send({
-        success: true,
-        message: '사용자 정보를 성공적으로 조회했습니다.',
-        data: {
-          user,
-        },
-      });
+      return reply.status(200).send(success({
+        user,
+      }, '사용자 정보를 성공적으로 조회했습니다.'));
     } catch (error) {
       return this.handleError(error, reply, request.server.log);
     }
@@ -113,34 +102,15 @@ export class AuthController {
    */
   private handleError(error: unknown, reply: FastifyReply, logger: any) {
     if (error instanceof z.ZodError) {
-      return reply.status(400).send({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: '입력 데이터가 유효하지 않습니다.',
-          details: error.errors,
-        },
-      });
+      return reply.status(400).send(error('입력 데이터가 유효하지 않습니다.', 'VALIDATION_ERROR'));
     }
 
     if (error instanceof AuthError) {
-      return reply.status(error.statusCode).send({
-        success: false,
-        error: {
-          code: error.code,
-          message: error.message,
-        },
-      });
+      return reply.status(error.statusCode).send(error(error.message, error.code));
     }
 
     logger.error(error);
-    return reply.status(500).send({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: '서버 오류가 발생했습니다.',
-      },
-    });
+    return reply.status(500).send(error('서버 오류가 발생했습니다.', 'INTERNAL_ERROR'));
   }
 }
 
