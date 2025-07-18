@@ -384,9 +384,29 @@ const hashedPassword = await hashPassword(password);
 
 ## 9. 코드 포맷팅
 
+### 세미콜론 사용
+```typescript
+// 모든 구문 끝에 세미콜론을 반드시 사용
+const user = { id: 'user-id', name: 'John' };
+const result = await someFunction();
+import { FastifyInstance } from 'fastify';
+
+// 객체나 배열 마지막 요소 뒤에도 세미콜론 사용
+const config = {
+  port: 3000,
+  host: 'localhost',
+};
+
+const items = [
+  'item1',
+  'item2',
+  'item3',
+];
+```
+
 ### 들여쓰기 및 공백
 ```typescript
-// 들여�기: 2칸 스페이스
+// 들여쓰기: 2칸 스페이스
 if (condition) {
   doSomething();
 }
