@@ -15,7 +15,6 @@ import {
 } from '../schemas/bookmark.schema';
 import { success, error } from '../utils/response';
 
-
 // === 북마크 컨트롤러 클래스 ===
 export class BookmarkController {
   /**

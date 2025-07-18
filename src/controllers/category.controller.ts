@@ -5,11 +5,10 @@
 
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { categoryService, CategoryError } from '../services/category.service';
-import { 
+import {
   createCategorySchema,
   updateCategorySchema,
   getCategoriesSchema,
-  categoryParamsSchema
 } from '../schemas/category.schema';
 import { success, error } from '../utils/response';
 import { z } from 'zod';
@@ -26,19 +25,25 @@ export class CategoryController {
       const userId = (request.user as any).userId;
       const skip = (page - 1) * limit;
 
-      const { categories, total } = await categoryService.getCategoriesByUserId(userId, skip, limit);
+      const { categories, total } = await categoryService.getCategoriesByUserId(
+        userId,
+        skip,
+        limit,
+      );
       const totalPages = Math.ceil(total / limit);
 
-      return reply.code(200).send(success({
-        categories,
-        pagination: {
-          page,
-          limit,
-          total,
-          totalPages,
-        },
-      }));
-    } catch (err) {
+      return reply.code(200).send(
+        success({
+          categories,
+          pagination: {
+            page,
+            limit,
+            total,
+            totalPages,
+          },
+        }),
+      );
+    } catch (_err) {
       return reply.code(500).send(error('카테고리 목록을 불러오는 중 오류가 발생했습니다.'));
     }
   }
@@ -58,7 +63,7 @@ export class CategoryController {
       }
 
       return reply.code(200).send(success(category));
-    } catch (err) {
+    } catch (_err) {
       return reply.code(500).send(error('카테고리 정보를 불러오는 중 오류가 발생했습니다.'));
     }
   }
@@ -75,7 +80,9 @@ export class CategoryController {
       return reply.code(201).send(success(category));
     } catch (err: any) {
       if (err instanceof z.ZodError) {
-        return reply.code(400).send(error('입력 데이터가 유효하지 않습니다.', 'VALIDATION_ERROR', err.issues));
+        return reply
+          .code(400)
+          .send(error('입력 데이터가 유효하지 않습니다.', 'VALIDATION_ERROR', err.issues));
       }
       if (err instanceof CategoryError) {
         return reply.code(err.statusCode).send(error(err.message));

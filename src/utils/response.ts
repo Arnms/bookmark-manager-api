@@ -37,11 +37,13 @@ export function createResponse<T = any>(
     success,
     message,
     data,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     error: success
       ? null
       : {
           code: errorCode || 'UNKNOWN_ERROR',
           message,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           ...(details && { details }),
         },
     timestamp: new Date().toISOString(),
@@ -95,6 +97,10 @@ export function success<T = any>(
 /**
  * 에러 응답 생성 (간편 함수)
  */
-export function error(message: string, code: string = 'UNKNOWN_ERROR', details?: any): ApiResponse<null> {
+export function error(
+  message: string,
+  code: string = 'UNKNOWN_ERROR',
+  details?: any,
+): ApiResponse<null> {
   return createErrorResponse(message, code, details);
 }

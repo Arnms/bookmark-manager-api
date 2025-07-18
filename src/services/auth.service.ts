@@ -26,7 +26,7 @@ export class AuthError extends Error {
   constructor(
     message: string,
     public code: string,
-    public statusCode: number = 400
+    public statusCode: number = 400,
   ) {
     super(message);
     this.name = 'AuthError';
@@ -47,11 +47,7 @@ export class AuthService {
     });
 
     if (existingUser) {
-      throw new AuthError(
-        '이미 존재하는 이메일 주소입니다.',
-        'EMAIL_ALREADY_EXISTS',
-        400
-      );
+      throw new AuthError('이미 존재하는 이메일 주소입니다.', 'EMAIL_ALREADY_EXISTS', 400);
     }
 
     // 비밀번호 해싱
@@ -87,22 +83,14 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new AuthError(
-        '이메일 또는 비밀번호가 올바르지 않습니다.',
-        'INVALID_CREDENTIALS',
-        401
-      );
+      throw new AuthError('이메일 또는 비밀번호가 올바르지 않습니다.', 'INVALID_CREDENTIALS', 401);
     }
 
     // 비밀번호 검증
     const isValidPassword = await verifyPassword(password, user.password);
 
     if (!isValidPassword) {
-      throw new AuthError(
-        '이메일 또는 비밀번호가 올바르지 않습니다.',
-        'INVALID_CREDENTIALS',
-        401
-      );
+      throw new AuthError('이메일 또는 비밀번호가 올바르지 않습니다.', 'INVALID_CREDENTIALS', 401);
     }
 
     return {
@@ -129,11 +117,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new AuthError(
-        '사용자를 찾을 수 없습니다.',
-        'USER_NOT_FOUND',
-        404
-      );
+      throw new AuthError('사용자를 찾을 수 없습니다.', 'USER_NOT_FOUND', 404);
     }
 
     return user;

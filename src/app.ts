@@ -76,12 +76,15 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(import('./routes/tags'), { prefix: '/tags' });
 
   // === 기본 헬스체크 라우트 ===
-  app.get('/health', async (request, reply) => {
-    return success({
-      status: 'ok',
-      environment: env.NODE_ENV,
-      timestamp: new Date().toISOString(),
-    }, '서버가 정상적으로 동작 중입니다.');
+  app.get('/health', async (_request, _reply) => {
+    return success(
+      {
+        status: 'ok',
+        environment: env.NODE_ENV,
+        timestamp: new Date().toISOString(),
+      },
+      '서버가 정상적으로 동작 중입니다.',
+    );
   });
 
   return app;

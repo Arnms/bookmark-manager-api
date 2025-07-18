@@ -7,14 +7,14 @@ import { FastifyInstance } from 'fastify';
 import { bookmarkController } from '../controllers/bookmark.controller';
 import { requireAuth } from '../middleware/auth';
 
-export default async function bookmarkRoutes(fastify: FastifyInstance) {
+export default function bookmarkRoutes(fastify: FastifyInstance) {
   // === 북마크 생성 API ===
   fastify.post(
     '/',
     {
       preHandler: requireAuth,
     },
-    bookmarkController.createBookmark.bind(bookmarkController)
+    bookmarkController.createBookmark.bind(bookmarkController),
   );
 
   // === 북마크 목록 조회 API ===
@@ -23,7 +23,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
     {
       preHandler: requireAuth,
     },
-    bookmarkController.getBookmarks.bind(bookmarkController)
+    bookmarkController.getBookmarks.bind(bookmarkController),
   );
 
   // === 북마크 단일 조회 API ===
@@ -32,7 +32,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
     {
       preHandler: requireAuth,
     },
-    bookmarkController.getBookmarkById.bind(bookmarkController)
+    bookmarkController.getBookmarkById.bind(bookmarkController),
   );
 
   // === 북마크 수정 API ===
@@ -41,7 +41,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
     {
       preHandler: requireAuth,
     },
-    bookmarkController.updateBookmark.bind(bookmarkController)
+    bookmarkController.updateBookmark.bind(bookmarkController),
   );
 
   // === 북마크 삭제 API (소프트 삭제) ===
@@ -50,7 +50,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
     {
       preHandler: requireAuth,
     },
-    bookmarkController.deleteBookmark.bind(bookmarkController)
+    bookmarkController.deleteBookmark.bind(bookmarkController),
   );
 
   // === 북마크에 태그 추가 API ===
@@ -59,7 +59,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
     {
       preHandler: requireAuth,
     },
-    bookmarkController.addTagsToBookmark.bind(bookmarkController)
+    bookmarkController.addTagsToBookmark.bind(bookmarkController),
   );
 
   // === 북마크에서 태그 제거 API ===
@@ -68,7 +68,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
     {
       preHandler: requireAuth,
     },
-    bookmarkController.removeTagFromBookmark.bind(bookmarkController)
+    bookmarkController.removeTagFromBookmark.bind(bookmarkController),
   );
 
   // === 북마크 카테고리 변경 API ===
@@ -77,6 +77,6 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
     {
       preHandler: requireAuth,
     },
-    bookmarkController.updateBookmarkCategory.bind(bookmarkController)
+    bookmarkController.updateBookmarkCategory.bind(bookmarkController),
   );
 }

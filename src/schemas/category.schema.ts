@@ -7,7 +7,10 @@ import { z } from 'zod';
 
 // === 카테고리 생성 스키마 ===
 export const createCategorySchema = z.object({
-  name: z.string().min(1, '카테고리명은 필수입니다.').max(100, '카테고리명은 100자 이내여야 합니다.'),
+  name: z
+    .string()
+    .min(1, '카테고리명은 필수입니다.')
+    .max(100, '카테고리명은 100자 이내여야 합니다.'),
   description: z.string().optional(),
   color: z
     .string()

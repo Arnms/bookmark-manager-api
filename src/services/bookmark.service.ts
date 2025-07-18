@@ -194,15 +194,18 @@ export class BookmarkService {
     };
 
     if (categoryId) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       whereCondition.categoryId = categoryId;
     }
 
     if (isPublic !== undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       whereCondition.isPublic = isPublic;
     }
 
     // 검색 기능 (제목, URL, 노트, 태그)
     if (search) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       whereCondition.OR = [
         { personalTitle: { contains: search } },
         { personalNote: { contains: search } },
@@ -214,11 +217,13 @@ export class BookmarkService {
 
     // 전체 개수 조회
     const totalCount = await prisma.bookmark.count({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       where: whereCondition,
     });
 
     // 북마크 목록 조회
     const bookmarks = await prisma.bookmark.findMany({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       where: whereCondition,
       skip,
       take: limit,

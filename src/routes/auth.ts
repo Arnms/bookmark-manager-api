@@ -7,7 +7,7 @@ import { FastifyInstance } from 'fastify';
 import { authController } from '../controllers/auth.controller';
 import { requireAuth } from '../middleware/auth';
 
-export default async function authRoutes(fastify: FastifyInstance) {
+export default function authRoutes(fastify: FastifyInstance) {
   // === 회원가입 API ===
   fastify.post('/register', authController.register.bind(authController));
 
@@ -20,6 +20,6 @@ export default async function authRoutes(fastify: FastifyInstance) {
     {
       preHandler: requireAuth,
     },
-    authController.getMe.bind(authController)
+    authController.getMe.bind(authController),
   );
 }

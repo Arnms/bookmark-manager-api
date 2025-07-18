@@ -35,7 +35,7 @@ export class CategoryError extends Error {
   constructor(
     message: string,
     public code: string,
-    public statusCode: number = 400
+    public statusCode: number = 400,
   ) {
     super(message);
     this.name = 'CategoryError';
@@ -57,11 +57,7 @@ export class CategoryService {
     });
 
     if (existingCategory) {
-      throw new CategoryError(
-        '이미 존재하는 카테고리명입니다',
-        'CATEGORY_ALREADY_EXISTS',
-        400
-      );
+      throw new CategoryError('이미 존재하는 카테고리명입니다', 'CATEGORY_ALREADY_EXISTS', 400);
     }
 
     return await prisma.category.create({
@@ -75,7 +71,11 @@ export class CategoryService {
   /**
    * 사용자별 카테고리 목록 조회
    */
-  async getCategoriesByUserId(userId: string, skip: number, take: number): Promise<{ categories: CategoryResponse[], total: number }> {
+  async getCategoriesByUserId(
+    userId: string,
+    skip: number,
+    take: number,
+  ): Promise<{ categories: CategoryResponse[]; total: number }> {
     const [categories, total] = await Promise.all([
       prisma.category.findMany({
         where: { userId },
@@ -113,17 +113,17 @@ export class CategoryService {
   /**
    * 카테고리 수정
    */
-  async updateCategory(id: string, userId: string, data: UpdateCategoryRequest): Promise<CategoryResponse | null> {
+  async updateCategory(
+    id: string,
+    userId: string,
+    data: UpdateCategoryRequest,
+  ): Promise<CategoryResponse | null> {
     const existingCategory = await prisma.category.findFirst({
       where: { id, userId },
     });
 
     if (!existingCategory) {
-      throw new CategoryError(
-        '카테고리를 찾을 수 없습니다',
-        'CATEGORY_NOT_FOUND',
-        404
-      );
+      throw new CategoryError('카테고리를 찾을 수 없습니다', 'CATEGORY_NOT_FOUND', 404);
     }
 
     return await prisma.category.update({
@@ -141,11 +141,7 @@ export class CategoryService {
     });
 
     if (!existingCategory) {
-      throw new CategoryError(
-        '카테고리를 찾을 수 없습니다',
-        'CATEGORY_NOT_FOUND',
-        404
-      );
+      throw new CategoryError('카테고리를 찾을 수 없습니다', 'CATEGORY_NOT_FOUND', 404);
     }
 
     await prisma.category.delete({

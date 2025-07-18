@@ -18,13 +18,6 @@ type LoginRequest = FastifyRequest<{
   Body: z.infer<typeof loginSchema>;
 }>;
 
-type AuthenticatedRequest = FastifyRequest & {
-  user: {
-    userId: string;
-    email: string;
-  };
-};
-
 // === 인증 컨트롤러 클래스 ===
 export class AuthController {
   /**
@@ -44,10 +37,15 @@ export class AuthController {
         email: user.email,
       });
 
-      return reply.status(201).send(success({
-        user,
-        token,
-      }, '회원가입이 완료되었습니다.'));
+      return reply.status(201).send(
+        success(
+          {
+            user,
+            token,
+          },
+          '회원가입이 완료되었습니다.',
+        ),
+      );
     } catch (error) {
       return this.handleError(error, reply, request.server.log);
     }
@@ -70,10 +68,15 @@ export class AuthController {
         email: user.email,
       });
 
-      return reply.status(200).send(success({
-        user,
-        token,
-      }, '로그인이 완료되었습니다.'));
+      return reply.status(200).send(
+        success(
+          {
+            user,
+            token,
+          },
+          '로그인이 완료되었습니다.',
+        ),
+      );
     } catch (error) {
       return this.handleError(error, reply, request.server.log);
     }
@@ -89,9 +92,14 @@ export class AuthController {
       // 사용자 정보 조회
       const user = await authService.getMe(userId);
 
-      return reply.status(200).send(success({
-        user,
-      }, '사용자 정보를 성공적으로 조회했습니다.'));
+      return reply.status(200).send(
+        success(
+          {
+            user,
+          },
+          '사용자 정보를 성공적으로 조회했습니다.',
+        ),
+      );
     } catch (error) {
       return this.handleError(error, reply, request.server.log);
     }
@@ -102,7 +110,9 @@ export class AuthController {
    */
   private handleError(err: unknown, reply: FastifyReply, logger: any) {
     if (err instanceof z.ZodError) {
-      return reply.status(400).send(error('입력 데이터가 유효하지 않습니다.', 'VALIDATION_ERROR', err.issues));
+      return reply
+        .status(400)
+        .send(error('입력 데이터가 유효하지 않습니다.', 'VALIDATION_ERROR', err.issues));
     }
 
     if (err instanceof AuthError) {
