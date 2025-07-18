@@ -3,9 +3,9 @@
  * 서버 시작 및 환경 설정 초기화
  */
 
-import { buildApp } from './app.js';
-import { env } from './config/env.js';
-import { prisma } from './config/database.js';
+import { buildApp } from './app';
+import { env } from './config/env';
+import { prisma } from './config/database';
 
 const start = async () => {
   const app = await buildApp();

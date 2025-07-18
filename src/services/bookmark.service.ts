@@ -64,7 +64,7 @@ export class BookmarkError extends Error {
   constructor(
     message: string,
     public code: string,
-    public statusCode: number = 400
+    public statusCode: number = 400,
   ) {
     super(message);
     this.name = 'BookmarkError';
@@ -174,11 +174,7 @@ export class BookmarkService {
     });
 
     if (!createdBookmark) {
-      throw new BookmarkError(
-        '북마크 생성에 실패했습니다.',
-        'BOOKMARK_CREATION_FAILED',
-        500
-      );
+      throw new BookmarkError('북마크 생성에 실패했습니다.', 'BOOKMARK_CREATION_FAILED', 500);
     }
 
     return createdBookmark;
@@ -277,11 +273,7 @@ export class BookmarkService {
     });
 
     if (!bookmark) {
-      throw new BookmarkError(
-        '북마크를 찾을 수 없습니다.',
-        'BOOKMARK_NOT_FOUND',
-        404
-      );
+      throw new BookmarkError('북마크를 찾을 수 없습니다.', 'BOOKMARK_NOT_FOUND', 404);
     }
 
     return bookmark;
@@ -293,7 +285,7 @@ export class BookmarkService {
   async updateBookmark(
     userId: string,
     bookmarkId: string,
-    data: UpdateBookmarkRequest
+    data: UpdateBookmarkRequest,
   ): Promise<BookmarkResponse> {
     const { personalTitle, personalNote, categoryId, isPublic, tags } = data;
 
@@ -307,11 +299,7 @@ export class BookmarkService {
     });
 
     if (!existingBookmark) {
-      throw new BookmarkError(
-        '북마크를 찾을 수 없습니다.',
-        'BOOKMARK_NOT_FOUND',
-        404
-      );
+      throw new BookmarkError('북마크를 찾을 수 없습니다.', 'BOOKMARK_NOT_FOUND', 404);
     }
 
     // 북마크 업데이트
@@ -378,11 +366,7 @@ export class BookmarkService {
     });
 
     if (!updatedBookmark) {
-      throw new BookmarkError(
-        '북마크 수정에 실패했습니다.',
-        'BOOKMARK_UPDATE_FAILED',
-        500
-      );
+      throw new BookmarkError('북마크 수정에 실패했습니다.', 'BOOKMARK_UPDATE_FAILED', 500);
     }
 
     return updatedBookmark;
@@ -402,11 +386,7 @@ export class BookmarkService {
     });
 
     if (!existingBookmark) {
-      throw new BookmarkError(
-        '북마크를 찾을 수 없습니다.',
-        'BOOKMARK_NOT_FOUND',
-        404
-      );
+      throw new BookmarkError('북마크를 찾을 수 없습니다.', 'BOOKMARK_NOT_FOUND', 404);
     }
 
     // 소프트 삭제 처리
@@ -424,7 +404,7 @@ export class BookmarkService {
   async addTagsToBookmark(
     userId: string,
     bookmarkId: string,
-    data: AddTagsToBookmarkRequest
+    data: AddTagsToBookmarkRequest,
   ): Promise<void> {
     const { tagIds } = data;
 
@@ -438,11 +418,7 @@ export class BookmarkService {
     });
 
     if (!existingBookmark) {
-      throw new BookmarkError(
-        '북마크를 찾을 수 없습니다.',
-        'BOOKMARK_NOT_FOUND',
-        404
-      );
+      throw new BookmarkError('북마크를 찾을 수 없습니다.', 'BOOKMARK_NOT_FOUND', 404);
     }
 
     // 태그 소유권 확인
@@ -454,11 +430,7 @@ export class BookmarkService {
     });
 
     if (userTags.length !== tagIds.length) {
-      throw new BookmarkError(
-        '유효하지 않은 태그가 포함되어 있습니다.',
-        'INVALID_TAGS',
-        400
-      );
+      throw new BookmarkError('유효하지 않은 태그가 포함되어 있습니다.', 'INVALID_TAGS', 400);
     }
 
     // 태그 연결 (중복 방지)
@@ -482,11 +454,7 @@ export class BookmarkService {
   /**
    * 북마크에서 태그 제거
    */
-  async removeTagFromBookmark(
-    userId: string,
-    bookmarkId: string,
-    tagId: string
-  ): Promise<void> {
+  async removeTagFromBookmark(userId: string, bookmarkId: string, tagId: string): Promise<void> {
     // 북마크 존재 확인
     const existingBookmark = await prisma.bookmark.findFirst({
       where: {
@@ -497,11 +465,7 @@ export class BookmarkService {
     });
 
     if (!existingBookmark) {
-      throw new BookmarkError(
-        '북마크를 찾을 수 없습니다.',
-        'BOOKMARK_NOT_FOUND',
-        404
-      );
+      throw new BookmarkError('북마크를 찾을 수 없습니다.', 'BOOKMARK_NOT_FOUND', 404);
     }
 
     // 태그 연결 삭제
@@ -519,7 +483,7 @@ export class BookmarkService {
   async updateBookmarkCategory(
     userId: string,
     bookmarkId: string,
-    data: UpdateBookmarkCategoryRequest
+    data: UpdateBookmarkCategoryRequest,
   ): Promise<void> {
     const { categoryId } = data;
 
@@ -533,11 +497,7 @@ export class BookmarkService {
     });
 
     if (!existingBookmark) {
-      throw new BookmarkError(
-        '북마크를 찾을 수 없습니다.',
-        'BOOKMARK_NOT_FOUND',
-        404
-      );
+      throw new BookmarkError('북마크를 찾을 수 없습니다.', 'BOOKMARK_NOT_FOUND', 404);
     }
 
     // 카테고리 소유권 확인 (카테고리가 설정되는 경우)
@@ -550,11 +510,7 @@ export class BookmarkService {
       });
 
       if (!category) {
-        throw new BookmarkError(
-          '유효하지 않은 카테고리입니다.',
-          'INVALID_CATEGORY',
-          400
-        );
+        throw new BookmarkError('유효하지 않은 카테고리입니다.', 'INVALID_CATEGORY', 400);
       }
     }
 
